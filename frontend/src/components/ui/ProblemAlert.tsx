@@ -20,7 +20,8 @@ const TONE_BY_KIND = {
  */
 export function ProblemAlert({ error, onRetry, testId = 'problem-alert' }: { error: unknown; onRetry?: () => void; testId?: string }) {
   const apiError = error instanceof ApiError ? error : null;
-  const presentation = describeProblem(apiError?.problem);
+  const problem: ProblemDetails | null = apiError?.problem ?? (error instanceof Error ? { title: error.message, detail: error.message, code: 'INTERNAL_ERROR' } : null);
+  const presentation = describeProblem(problem);
   const fieldErrors = apiError?.problem.errors ?? [];
   const code = apiError?.code ?? 'UNKNOWN';
 

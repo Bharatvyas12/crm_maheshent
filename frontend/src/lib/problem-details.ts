@@ -17,7 +17,7 @@ export interface ProblemPresentation {
 const MAP: Record<string, ProblemPresentation> = {
   AUTHENTICATION_REQUIRED: { title: 'Please sign in again.', kind: 'permission', nextStep: 'Redirecting to login.' },
   SESSION_EXPIRED: { title: 'Your session expired.', kind: 'permission', nextStep: 'Redirecting to login.' },
-  INVALID_CREDENTIALS: { title: 'Incorrect username or password.', kind: 'error' },
+  INVALID_CREDENTIALS: { title: 'Incorrect username or password.', kind: 'error', nextStep: 'Please check your username and password for typos (e.g. ChangeMe123!).' },
   ACCOUNT_LOCKED: { title: 'This account is temporarily locked.', kind: 'error', nextStep: 'Try again later or contact the admin.' },
   ACCOUNT_DISABLED: { title: 'This account is disabled.', kind: 'error', nextStep: 'Contact the admin.' },
   CSRF_INVALID: { title: 'Your session token is no longer valid.', kind: 'error', nextStep: 'Refresh the page and try again.' },
