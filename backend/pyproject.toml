@@ -1,0 +1,27 @@
+[project]
+name = "workforce-crm-backend"
+version = "0.1.0"
+description = "Workforce CRM backend (FastAPI + PostgreSQL + SQLAlchemy + Alembic)"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic>=2",
+    "pydantic-settings",
+    "sqlalchemy>=2",
+    "psycopg[binary]>=3.1",
+    "alembic",
+    "argon2-cffi",
+    "python-multipart",
+    "email-validator",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-asyncio", "httpx"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

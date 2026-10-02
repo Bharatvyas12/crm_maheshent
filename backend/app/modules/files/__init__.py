@@ -1,0 +1,1 @@
+"""Files module: upload metadata, validation and authorized download."""

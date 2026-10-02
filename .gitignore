@@ -1,0 +1,32 @@
+# Local environment and storage directories
+.local/
+var/
+*.log
+
+# Node dependencies and build
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+frontend/out/
+
+# Python cache & virtual environment
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+ENV/
+
+# Environment files
+.env.local
+.env.development.local
+.env.test.local
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

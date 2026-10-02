@@ -1,0 +1,1 @@
+"""Domain modules. Each owns its tables and exposes service/router interfaces."""

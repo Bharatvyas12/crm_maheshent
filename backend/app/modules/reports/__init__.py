@@ -1,0 +1,1 @@
+"""Reports module: read-only aggregation and export generation."""

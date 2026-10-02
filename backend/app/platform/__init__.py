@@ -1,0 +1,1 @@
+"""Platform module: transactional outbox, idempotency keys, job bookkeeping."""

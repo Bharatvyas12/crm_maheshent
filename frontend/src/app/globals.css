@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens (docs/07_UI_SPEC.md section 3).
+ * Values are stored as space separated RGB channels so Tailwind can apply opacity.
+ */
+:root {
+  --color-primary: 29 78 216;
+  --color-primary-fg: 255 255 255;
+  --color-primary-soft: 219 234 254;
+  --color-success: 21 128 61;
+  --color-success-soft: 220 252 231;
+  --color-warning: 180 83 9;
+  --color-warning-soft: 254 243 199;
+  --color-danger: 185 28 28;
+  --color-danger-soft: 254 226 226;
+  --color-info: 29 78 216;
+  --color-info-soft: 219 234 254;
+  --color-surface: 255 255 255;
+  --color-surface-muted: 248 250 252;
+  --color-border: 203 213 225;
+  --color-text: 15 23 42;
+  --color-text-muted: 71 85 105;
+  --color-text-inverse: 255 255 255;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: rgb(var(--color-surface-muted));
+  color: rgb(var(--color-text));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* 16px base on mobile avoids iOS input zoom (docs/07 section 3). */
+  font-size: 1rem;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--color-primary));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Tables scroll horizontally on small screens rather than truncating data. */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Safe-area padding for the employee bottom navigation on notched devices. */
+.pb-safe {
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+}

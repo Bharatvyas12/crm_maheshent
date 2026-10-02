@@ -1,0 +1,1 @@
+"""Attendance module: events, sessions, breaks, verification, QR, corrections."""
