@@ -1,13 +1,18 @@
 import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
+import { dirname, resolve } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   typedRoutes: false,
-  // The repo root has an unrelated lockfile; pin tracing to this app so Next does not infer a
-  // parent directory as the workspace root.
-  outputFileTracingRoot: dirname(fileURLToPath(import.meta.url)),
+  outputFileTracingRoot: __dirname,
+  webpack: (config) => {
+    config.resolve.alias['@'] = resolve(__dirname, 'src');
+    return config;
+  },
   async rewrites() {
     const backendUrl = process.env.BACKEND_INTERNAL_URL || 'http://127.0.0.1:8000';
     return [
