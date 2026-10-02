@@ -2,6 +2,7 @@
 
 import { ApiError } from '@/lib/api-client';
 import { describeProblem } from '@/lib/problem-details';
+import type { ProblemDetails } from '@/lib/types';
 import { Alert } from './Alert';
 
 const TONE_BY_KIND = {
