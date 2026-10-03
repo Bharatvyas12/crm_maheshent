@@ -150,6 +150,34 @@ export default function AdminSettingsPage() {
   const [error, setError] = useState<unknown>(null);
   const [saveOpen, setSaveOpen] = useState(false);
   const [historyKey, setHistoryKey] = useState('');
+  const [geoLocating, setGeoLocating] = useState(false);
+  const [geoError, setGeoError] = useState<string | null>(null);
+
+  function handleDetectLocation() {
+    if (!navigator.geolocation) {
+      setGeoError('Geolocation is not supported by your browser.');
+      return;
+    }
+    setGeoLocating(true);
+    setGeoError(null);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setGeoLocating(false);
+        const lat = position.coords.latitude.toFixed(6);
+        const lng = position.coords.longitude.toFixed(6);
+        setDrafts((prev) => ({
+          ...prev,
+          'attendance.geofence_latitude': lat,
+          'attendance.geofence_longitude': lng,
+        }));
+      },
+      (err) => {
+        setGeoLocating(false);
+        setGeoError(err.message || 'Failed to retrieve GPS location.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
 
   const schemaItems = useMemo(() => (Array.isArray(schema.data?.items) ? schema.data.items : []), [schema.data]);
 
@@ -245,10 +273,26 @@ export default function AdminSettingsPage() {
         <div className="space-y-4">
           {Array.from(new Set(visible.map((item) => item.group))).map((groupName) => (
             <Card key={groupName}>
-              <CardHeader>
+              <CardHeader className="flex flex-wrap items-center justify-between gap-3">
                 <CardTitle as="h2">{humanize(groupName)} Settings</CardTitle>
+                {groupName === 'attendance' && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    loading={geoLocating}
+                    onClick={handleDetectLocation}
+                  >
+                    📍 Detect & Set Current Shop GPS Location
+                  </Button>
+                )}
               </CardHeader>
               <CardBody className="space-y-6">
+                {groupName === 'attendance' && geoError ? (
+                  <Alert tone="warning" title="Location Detection Failed">
+                    {geoError}
+                  </Alert>
+                ) : null}
                 {visible
                   .filter((item) => item.group === groupName)
                   .map((item) => {
