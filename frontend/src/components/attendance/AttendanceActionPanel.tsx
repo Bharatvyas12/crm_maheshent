@@ -83,7 +83,7 @@ export function AttendanceActionPanel({ record }: { record: AttendanceRecord }) 
   const openBreak = record.open_break ?? null;
 
   function buildEvidence(location: LocationFix | null, qrToken: string | null): Record<string, unknown> {
-    const evidence: Record<string, unknown> = { client_time: new Date().toISOString(), device_info: navigator.userAgent.slice(0, 200) };
+    const evidence: Record<string, unknown> = { client_time: new Date().toISOString(), device_info: { user_agent: navigator.userAgent.slice(0, 200) } };
     if (location) {
       evidence.latitude = location.latitude;
       evidence.longitude = location.longitude;

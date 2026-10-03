@@ -19,7 +19,15 @@ from app.modules.orders import service
 
 router = APIRouter(tags=["orders"])
 
-PAYMENT_MODES = {"CASH", "CARD", "UPI", "COD", "OTHER"}
+PAYMENT_MODES = {"PREPAID", "COD", "OTHER", "CASH", "CARD", "UPI"}
+PAYMENT_MODE_MAP = {
+    "CASH": "COD",
+    "COD": "COD",
+    "CARD": "PREPAID",
+    "UPI": "PREPAID",
+    "PREPAID": "PREPAID",
+    "OTHER": "OTHER",
+}
 
 
 class BroadcastInput(BaseModel):
@@ -142,8 +150,13 @@ async def list_orders(
 
 @router.post("/orders", status_code=201)
 async def create_order(payload: OrderCreateRequest, ctx: Ctx = Depends(require("order.create"))) -> dict:
-    if payload.payment_mode and payload.payment_mode not in PAYMENT_MODES:
-        raise ValidationError(f"Unsupported payment mode: {payload.payment_mode}")
+    if payload.payment_mode:
+        raw_mode = payload.payment_mode.upper()
+        if raw_mode not in PAYMENT_MODES:
+            raise ValidationError(f"Unsupported payment mode: {payload.payment_mode}")
+        payment_mode = PAYMENT_MODE_MAP.get(raw_mode, "OTHER")
+    else:
+        payment_mode = None
     amount = quantize_money(payload.order_amount) if payload.order_amount is not None else quantize_money(Decimal("0.00"))
     order = await service.create_order(
         ctx.session,
@@ -157,7 +170,7 @@ async def create_order(payload: OrderCreateRequest, ctx: Ctx = Depends(require("
         item_count=payload.item_count,
         order_amount=amount,
         currency=(payload.currency or ctx.settings.currency()).upper(),
-        payment_mode=payload.payment_mode,
+        payment_mode=payment_mode,
         notes=payload.notes,
         broadcast=payload.broadcast.model_dump() if payload.broadcast else None,
         settings=ctx.settings,
@@ -247,8 +260,11 @@ async def update_order(
     changes = payload.model_dump(exclude_unset=True)
     if "order_amount" in changes and changes["order_amount"] is not None:
         changes["order_amount"] = quantize_money(changes["order_amount"])
-    if "payment_mode" in changes and changes["payment_mode"] not in (None, *PAYMENT_MODES):
-        raise ValidationError(f"Unsupported payment mode: {changes['payment_mode']}")
+    if "payment_mode" in changes and changes["payment_mode"] is not None:
+        raw_mode = changes["payment_mode"].upper()
+        if raw_mode not in PAYMENT_MODES:
+            raise ValidationError(f"Unsupported payment mode: {changes['payment_mode']}")
+        changes["payment_mode"] = PAYMENT_MODE_MAP.get(raw_mode, "OTHER")
     before = {key: getattr(order, key) for key in changes}
     for key, value in changes.items():
         setattr(order, key, value)

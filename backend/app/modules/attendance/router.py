@@ -29,7 +29,7 @@ class EvidenceRequest(BaseModel):
     location_captured_at: datetime | None = None
     qr_token: str | None = Field(default=None, max_length=512)
     client_time: datetime | None = None
-    device_info: dict | None = None
+    device_info: dict | str | None = None
 
 
 class BreakStartRequest(BaseModel):
