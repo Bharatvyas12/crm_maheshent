@@ -322,16 +322,33 @@ export function AttendanceActionPanel({ record }: { record: AttendanceRecord }) 
       ) : null}
 
       {action && action !== 'REQUEST_CORRECTION' ? (
-        <Button
-          size="action"
-          onClick={() => void handlePrimary()}
-          loading={busy}
-          loadingLabel="Working"
-          disabled={busy || (action === 'START_BREAK' && breakTypeList.length === 0)}
-          data-testid={`attendance-${action.toLowerCase().replace(/_/g, '-')}-button`}
-        >
-          {ACTION_LABEL[action]}
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            size="action"
+            onClick={() => void handlePrimary()}
+            loading={busy}
+            loadingLabel="Working"
+            disabled={busy || (action === 'START_BREAK' && breakTypeList.length === 0)}
+            data-testid={`attendance-${action.toLowerCase().replace(/_/g, '-')}-button`}
+          >
+            {ACTION_LABEL[action]}
+          </Button>
+
+          {action === 'CHECK_IN' || action === 'CHECK_OUT' ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="action"
+              disabled={busy}
+              onClick={() => {
+                setOutcome(null);
+                setPhase('scanning');
+              }}
+            >
+              📷 Scan Shop QR Code
+            </Button>
+          ) : null}
+        </div>
       ) : null}
 
       {action === 'START_BREAK' && breakTypeList.length === 0 && !breakTypes.isLoading ? (
