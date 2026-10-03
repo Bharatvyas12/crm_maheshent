@@ -30,7 +30,9 @@ function useInvalidate() {
 function useErrorToast() {
   const { push } = useToast();
   return (error: unknown, fallback: string) => {
-    push({ tone: 'error', title: error instanceof ApiError ? describeProblem(error.problem).title : fallback });
+    const detail = error instanceof ApiError ? error.problem.detail : null;
+    const title = error instanceof ApiError ? describeProblem(error.problem).title : fallback;
+    push({ tone: 'error', title: detail || title });
   };
 }
 
@@ -55,12 +57,14 @@ export function useCreateEmployee() {
       invalidate();
       push({
         tone: 'success',
-        title: `Employee ${result.employee.employee_code} created`,
-        description: result.initial_password ? `One-time password: ${result.initial_password} (shown once)` : undefined
+        title: `Employee ${result.employee.employee_code} created successfully`,
+        description: result.initial_password ? `Initial password: ${result.initial_password}` : undefined
       });
     },
     onError: (error) => {
-      push({ tone: 'error', title: error instanceof ApiError ? describeProblem(error.problem).title : 'Could not create the employee.' });
+      const detail = error instanceof ApiError ? error.problem.detail : null;
+      const title = error instanceof ApiError ? describeProblem(error.problem).title : 'Could not create the employee.';
+      push({ tone: 'error', title: detail || title });
     }
   });
 }

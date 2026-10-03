@@ -214,8 +214,10 @@ export default function AdminEmployeesPage() {
         <div className="grid gap-3 sm:grid-cols-2">
           {createError ? (
             <div className="sm:col-span-2">
-              <Alert tone="danger" title={describeProblem(createError.problem).title} nextStep={describeProblem(createError.problem).nextStep}>
-                {createError.problem.detail ? <p>{createError.problem.detail}</p> : null}
+              <Alert tone="danger" title={createError.problem.detail || describeProblem(createError.problem).title} nextStep={describeProblem(createError.problem).nextStep}>
+                {createError.problem.detail && describeProblem(createError.problem).title !== createError.problem.detail ? (
+                  <p>{createError.problem.detail}</p>
+                ) : null}
               </Alert>
             </div>
           ) : null}
